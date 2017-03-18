@@ -17,6 +17,13 @@ I will do a lesson on using **.git** and **GitHub** in the first 30 minutes of h
 ## So this is what we are working on: 
 
 * Intents - these are the phrases we need to activate the skill
+  * we have the activation intent - let's look at how the intents work together to envoke the scripted actions
+
 * Lambda function - this is the code that will take the intents and evoke a reaction
+  * how can we input the information from other APIs
+  
 * User Scripts
+  * what would a complete cycle of our conversation look like?
+  
 * Logic 
+  * decision trees in alexa how do these work
