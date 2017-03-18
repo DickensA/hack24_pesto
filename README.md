@@ -30,4 +30,4 @@ I will do a lesson on using **.git** and **GitHub** in the first 30 minutes of h
 
 Here is our initial diagram plan:
 
-!{Initial Plan](/initial_diagram.jpg) 
+![Initial Plan](/initial_diagram.jpg) 
