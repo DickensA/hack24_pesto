@@ -27,3 +27,7 @@ I will do a lesson on using **.git** and **GitHub** in the first 30 minutes of h
   
 * Logic 
   * decision trees in alexa how do these work
+
+Here is our initial diagram plan:
+
+!{Initial Plan](/initial_diagram.jpg) 
