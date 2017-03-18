@@ -31,3 +31,7 @@ I will do a lesson on using **.git** and **GitHub** in the first 30 minutes of h
 Here is our initial diagram plan:
 
 ![Initial Plan](/initial_diagram.jpg) 
+
+We added more detail once we got the start intent working: 
+
+![Second Plan](/our_second_plan.jpg)
