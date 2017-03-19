@@ -97,12 +97,12 @@ var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
         this.emitWithState('NewSession');
     },
     'AMAZON.YesIntent': function() {
-        this.attributes.countresponse = 2;
+        this.attributes.countResponse = 2;
         this.handler.state = states.PARTYMODE;
         this.emitWithState('GetPartyIntent');
     },
     'AMAZON.NoIntent': function() {
-        this.attributes.countresponse = 1;
+        this.attributes.countResponse = 1;
         this.handler.state = states.PARTYMODE;
         this.emitWithState('GetPartyIntent');
         //console.log("NOINTENT")
