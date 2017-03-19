@@ -3,18 +3,15 @@
 'use strict';
 
 const Alexa = require('alexa-sdk');
-//const parties = require('./parties'); // TODO Need to figure out how to put up this list
-// would come from a web service, json file etc. in the real deal
 
-//const APP_ID = undefined; // TODO replace with our app ID (OPTIONAL).
-
+//defining the states
 var states = {
     // setting up states
     PARTYMODE: '_PARTYMODE',
     ENDMODE: '_ENDMODE'
 }
-//var event_counter = 0;
 
+//Initializing Alexa and the scroll through the list of events
 var  startHandlers ={
     //new session of our skill
     'NewSession': function() {
@@ -28,14 +25,13 @@ var  startHandlers ={
         this.emit(':ask', this.attributes.speechOutput, this.attributes.repromptSpeech);
     }
 }; 
-
+//The function that controls the party listing functionality of Alexa
 var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
     'NewSession': function() {
          this.emit('NewSession'); // Uses the handler in startHandlers
     },
-    //Our own intent function for getting alexa to read out the party list?
+    //Our own intent function for getting alexa to read out the party list
     'GetPartyIntent' : function() {
-        // const partyList = this.t('PARTIES');
         var partyList = "";
         let fakedParties = [
             " Saria's super cool birthday, at The Broadway this Saturday at Midnight ",
@@ -44,18 +40,9 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
             " An intercity disco, between New York and San Francisco with The Vengaboys, As soon as the Vengabus gets here, I've heard it's coming "
         ];
         
-        // check to make sure we stay inside the list index
-        //if (this.attributes.eventCounter >= (fakedParties.length - 1)) {
-            // all events have been accessed, we should skip to the first event again
-            //this.attributes.eventCounter = 0;
-            
-        //} else {
             partyList = this.t(fakedParties[this.attributes.eventCounter]);
             this.attributes.eventCounter++;
-            //var event_counter = this.attributes["eventCounter"]+1;
-        // }
-    
-        //if have parties in the list
+        //check if still have parties left in the list
         if (partyList) {
             this.handler.state = states.ENDMODE;
             //reads out the list
@@ -89,7 +76,7 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
        this.emit(':ask', message);
     }
 });
-
+//Functionality to take action by Alexa according to the response of the person. 
 var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
     'NewSession': function() {
         this.handler.state = '';
@@ -97,11 +84,11 @@ var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
     },
     'AMAZON.YesIntent': function() {
         this.handler.state = states.PARTYMODE;
-        this.emitWithState(/*this.emit(':tell', 'Awesome! I\'ll add this to your calendar.'),*/ 'GetPartyIntent');
+        this.emitWithState('GetPartyIntent');
     },
     'AMAZON.NoIntent': function() {
         this.handler.state = states.PARTYMODE;
-        this.emitWithState('GetPartyIntent', 'Yeah, to be fair I heard it was lame too!');
+        this.emitWithState('GetPartyIntent');
         //console.log("NOINTENT");
     },
     'AMAZON.StopIntent': function () {
@@ -115,7 +102,7 @@ var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
     }, 
 });
 
-
+//some messages gathered together
 const languageStrings = {
     'en-US' : {
         translation: {
@@ -130,15 +117,7 @@ const languageStrings = {
     },
 };
 
-// var eventListCountHandlers = {
-
-//     'NextItem': function(callback) {
-//         this.handler.state = states.PARTYMODE;
-//         this.attributes['eventCounter']++;
-//         callback();
-//     }
-// };
-
+//employs the code
 exports.handler = (event, context) => {
     const alexa = Alexa.handler(event, context);
     alexa.resources = languageStrings;
