@@ -20,7 +20,7 @@ var  startHandlers ={
             this.attributes.countResponse = 0;
         }
         this.handler.state = states.PARTYMODE;
-        this.attributes.speechOutput = this.t('WELCOME_MESSAGE');
+        this.attributes.speechOutput = this.t('We Like to Party is an Alexa Skill that transforms a list of event invitations into a two way conversation. She gently helps you to make decisions, and pushes you back into the real world. With a pinch of sass, ahah. ' + this.t('WELCOME_MESSAGE'));
         //no reply or a reply that's not recognized will trigger this
         this.attributes.repromptSpeech = this.t('WELCOME_REPROMPT');
         this.emit(':ask', this.attributes.speechOutput, this.attributes.repromptSpeech);
@@ -47,7 +47,7 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
         if (partyList) {
             this.handler.state = states.ENDMODE;
                 if (this.attributes.countResponse == 1) {
-                    this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways. Do you want to go to');
+                    this.attributes.speechOutput = this.t('Sure? You should go out more often. Your social life is worse than mine. But okay, this party wasn\'t that cool anyways. Do you want to go to');
                 } else if (this.attributes.countResponse == 2) {
                     this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar. Do you want to go to');
                 } else {
@@ -57,9 +57,9 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
             this.emit(':ask', this.attributes.speechOutput + partyList, 'Yes or No?');
         } else {
                 if (this.attributes.countResponse == 1) {
-                    this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways.' + ' NO_PARTIES_IN_LIST');
+                    this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways.' + this.t('NO_PARTIES_IN_LIST'));
                 } else if (this.attributes.countResponse == 2) {
-                    this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar.' + ' NO_PARTIES_IN_LIST');
+                    this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar, whoop whoop.' + this.t('NO_PARTIES_IN_LIST'));
                 } else {
                     this.attributes.speechOutput = this.t('NO_PARTIES_IN_LIST');
                 }
@@ -122,7 +122,7 @@ var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
 const languageStrings = {
     'en-US' : {
         translation: {
-            WELCOME_MESSAGE: "I Like To Party! Do you like to party? Let's take a look at your invites",
+            WELCOME_MESSAGE: " I Like To Party! Do you like to party? Let's take a look at your invites",
             WELCOME_REPROMT: "Hello. Are you there? Would you like to hear your party list?",
             //PARTIES: "Parteeeey", // not sure how this works, but we need this to get the party list
             NO_PARTIES_IN_LIST: "Sorry matey, no more parties for you!",
