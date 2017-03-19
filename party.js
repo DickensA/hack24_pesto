@@ -57,9 +57,9 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
             this.emit(':ask', this.attributes.speechOutput + partyList, 'Yes or No?');
         } else {
                 if (this.attributes.countResponse == 1) {
-                    this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways. NO_PARTIES_IN_LIST');
+                    this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways.' + ' NO_PARTIES_IN_LIST');
                 } else if (this.attributes.countResponse == 2) {
-                    this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar. NO_PARTIES_IN_LIST');
+                    this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar.' + ' NO_PARTIES_IN_LIST');
                 } else {
                     this.attributes.speechOutput = this.t('NO_PARTIES_IN_LIST');
                 }
