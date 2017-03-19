@@ -26,7 +26,7 @@ var  startHandlers ={
         this.attributes.speechOutput = this.t('WELCOME_MESSAGE');
         //no reply or a reply that's not recognized will trigger this
         this.attributes.repromptSpeech = this.t('WELCOME_REPROMPT');
-        this.emit(':ask', this.attributes.speechOutput, this.attributes.repromptSpeech);
+        this.emitwithState(':ask', this.attributes.speechOutput, this.attributes.repromptSpeech);
     }
 }; 
 
@@ -57,10 +57,10 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
         //if have parties in the list
         if (partyList) {
             //reads out the list
-            this.emit(':tell', partyList);
+            this.emitwithState(':tell', partyList);
         } else {
             this.attributes.speechOutput = this.t('NO_PARTIES_IN_LIST');
-            this.emit(':tell', this.attributes.speechOutput);
+            this.emitwithState(':tell', this.attributes.speechOutput);
         }
     },
     'AMAZON.HelpIntent': function () {
