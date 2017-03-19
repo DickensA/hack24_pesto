@@ -17,7 +17,7 @@ var  startHandlers ={
     'NewSession': function() {
         if(Object.keys(this.attributes).length === 0) {
             this.attributes.eventCounter = 0;
-            var response = 0;
+            this.attributes.countResponse = 0;
         }
         this.handler.state = states.PARTYMODE;
         this.attributes.speechOutput = this.t('WELCOME_MESSAGE');
@@ -32,7 +32,7 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
          this.emit('NewSession'); // Uses the handler in startHandlers
     },
     //Our own intent function for getting alexa to read out the party list
-    'GetPartyIntent' : function(val) {
+    'GetPartyIntent' : function() {
         var partyList = "";
         let fakedParties = [
             " Saria's super cool birthday, at The Broadway this Saturday at Midnight ",
@@ -46,9 +46,9 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
         //check if still have parties left in the list
         if (partyList) {
             this.handler.state = states.ENDMODE;
-                if (response == 1) {
+                if (this.attributes.countResponse == 1) {
                     this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways. Do you want to go to');
-                } else if (response == 2) {
+                } else if (this.attributes.countResponse == 2) {
                     this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar. Do you want to go to');
                 } else {
                     this.attributes.speechOutput = this.t('Do you want to go to');
@@ -56,7 +56,13 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
             //reads out the list
             this.emit(':ask', this.attributes.speechOutput + partyList, 'Yes or No?');
         } else {
-            this.attributes.speechOutput = this.t('NO_PARTIES_IN_LIST');
+                if (this.attributes.countResponse == 1) {
+                    this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways. NO_PARTIES_IN_LIST');
+                } else if (this.attributes.countResponse == 2) {
+                    this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar. NO_PARTIES_IN_LIST');
+                } else {
+                    this.attributes.speechOutput = this.t('NO_PARTIES_IN_LIST');
+                }
             this.emit(':ask', this.attributes.speechOutput);
         }
     },
@@ -91,15 +97,15 @@ var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
         this.emitWithState('NewSession');
     },
     'AMAZON.YesIntent': function() {
-        response = 2;
+        this.attributes.countresponse = 2;
         this.handler.state = states.PARTYMODE;
-        this.emitWithState('GetPartyIntent', response);
+        this.emitWithState('GetPartyIntent');
     },
     'AMAZON.NoIntent': function() {
-        response = 1;
+        this.attributes.countresponse = 1;
         this.handler.state = states.PARTYMODE;
-        this.emitWithState('GetPartyIntent', response);
-        //console.log("NOINTENT");
+        this.emitWithState('GetPartyIntent');
+        //console.log("NOINTENT")
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', "In a while crocodile");
