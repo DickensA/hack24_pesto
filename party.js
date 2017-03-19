@@ -17,6 +17,7 @@ var  startHandlers ={
     'NewSession': function() {
         if(Object.keys(this.attributes).length === 0) {
             this.attributes.eventCounter = 0;
+            var response = 0;
         }
         this.handler.state = states.PARTYMODE;
         this.attributes.speechOutput = this.t('WELCOME_MESSAGE');
@@ -31,8 +32,13 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
          this.emit('NewSession'); // Uses the handler in startHandlers
     },
     //Our own intent function for getting alexa to read out the party list
-    'GetPartyIntent' : function() {
+    'GetPartyIntent' : function(val) {
         var partyList = "";
+        if (response == 1) {
+            this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways');
+        } else if (response == 2) {
+            this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar');
+        }
         let fakedParties = [
             " Saria's super cool birthday, at The Broadway this Saturday at Midnight ",
             " Amy's awesome rave, in the woods tomorrow at Noon, you'll need a mask and a torch ", 
@@ -83,12 +89,14 @@ var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
         this.emitWithState('NewSession');
     },
     'AMAZON.YesIntent': function() {
+        response = 2;
         this.handler.state = states.PARTYMODE;
-        this.emitWithState('GetPartyIntent');
+        this.emitWithState('GetPartyIntent', response);
     },
     'AMAZON.NoIntent': function() {
+        response = 1;
         this.handler.state = states.PARTYMODE;
-        this.emitWithState('GetPartyIntent');
+        this.emitWithState('GetPartyIntent', response);
         //console.log("NOINTENT");
     },
     'AMAZON.StopIntent': function () {
