@@ -34,11 +34,6 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
     //Our own intent function for getting alexa to read out the party list
     'GetPartyIntent' : function(val) {
         var partyList = "";
-        if (response == 1) {
-            this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways');
-        } else if (response == 2) {
-            this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar');
-        }
         let fakedParties = [
             " Saria's super cool birthday, at The Broadway this Saturday at Midnight ",
             " Amy's awesome rave, in the woods tomorrow at Noon, you'll need a mask and a torch ", 
@@ -51,8 +46,15 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
         //check if still have parties left in the list
         if (partyList) {
             this.handler.state = states.ENDMODE;
+                if (response == 1) {
+                    this.attributes.speechOutput = this.t('This party wasn\'t that cool anyways. Do you want to go to');
+                } else if (response == 2) {
+                    this.attributes.speechOutput = this.t('Cool, I\'ve added it to your calendar. Do you want to go to');
+                } else {
+                    this.attributes.speechOutput = this.t('Do you want to go to');
+                }
             //reads out the list
-            this.emit(':ask', 'Do you want to go to' + partyList, 'Yes or No?');
+            this.emit(':ask', this.attributes.speechOutput + partyList, 'Yes or No?');
         } else {
             this.attributes.speechOutput = this.t('NO_PARTIES_IN_LIST');
             this.emit(':ask', this.attributes.speechOutput);
