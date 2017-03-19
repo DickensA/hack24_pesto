@@ -8,25 +8,35 @@ const Alexa = require('alexa-sdk');
 // would come from a web service, json file etc. in the real deal
 
 //const APP_ID = undefined; // TODO replace with our app ID (OPTIONAL).
+
+var states = {
+    // setting up states
+    PARTYMODE: '_PARTYMODE',
+    ENDMODE: '_ENDMODE'
+}
 var event_counter = 0;
 
-const handlers ={
+var  startHandlers ={
     //new session of our skill
     'NewSession': function() {
         if(Object.keys(this.attributes).length === 0) {
             this.attributes['eventCounter'] = event_counter;
         }
-        this.attributes.speechOutput = this.t('WELCOME_MESSAGE' /*any variables we use in the message*/);
+        this.handler.state = states.PARTYMODE;
+        this.attributes.speechOutput = this.t('WELCOME_MESSAGE');
         //no reply or a reply that's not recognized will trigger this
         this.attributes.repromptSpeech = this.t('WELCOME_REPROMPT');
         this.emit(':ask', this.attributes.speechOutput, this.attributes.repromptSpeech);
-    },
+    }
+} 
+
+var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE{
+    'NewSession': function () {
+        this.emit('NewSession'); // Uses the handler in startHandlers
+    }
     //Our own intent function for getting alexa to read out the party list?
     'GetPartyIntent' : function() {
         // const partyList = this.t('PARTIES');
-        
-        
-        // new NEW nEW NEW
         var partyList = "";
         
         let fakedParties = [
@@ -44,10 +54,7 @@ const handlers ={
             partyList = this.t(fakedParties[this.attributes.eventCounter]);
             var event_counter = this.attributes["eventCounter"]+1;
         }
-        
-        // NEW NEW new end
-        
-        
+    
         //if have parties in the list
         if (partyList) {
             //reads out the list
@@ -66,10 +73,10 @@ const handlers ={
         this.emit(':ask', this.attributes.speechOutput, this.attributes.repromptSpeech);
     },
     'AMAZON.StopIntent': function () {
-        this.emit('SessionEndedRequest');
+        this.emit(':tell', "In a while crocodile");
     },
     'AMAZON.CancelIntent': function () {
-        this.emit('SessionEndedRequest');
+        this.emit(':tell', "In a while crocodile");
     },
     'SessionEndedRequest': function () {
         this.emit(':tell', this.t('STOP_MESSAGE'));
@@ -77,25 +84,23 @@ const handlers ={
 };
 
 
-
 const languageStrings = {
     'en-US' : {
         translation: {
-            WELCOME_MESSAGE: "Do you like to party? I Like To Party! You can ask me about your upcoming events. Would you like to hear your party list?",
-            WELCOME_REPROMT: "You can ask me about your upcoming events. Would you like to hear your party list?",
-            PARTIES: "Parteeeey", // not sure how this works, but we need this to get the party list
+            WELCOME_MESSAGE: "I Like To Party! Do you like to party? Let's take a look at your invites",
+            WELCOME_REPROMT: "Hello. Are you there? Would you like to hear your party list?",
+            //PARTIES: "Parteeeey", // not sure how this works, but we need this to get the party list
             NO_PARTIES_IN_LIST: "Sorry matey, no parties today!",
             HELP_MESSAGE: "Help",
             HELP_REPROMPT: "Help reprompt",
-            STOP_MESSAGE: "Have fun!",
+            STOP_MESSAGE: "Until next time; Party on!",
         },
     },
 };
 
 exports.handler = (event, context) => {
     const alexa = Alexa.handler(event, context);
-    
     alexa.resources = languageStrings;
-    alexa.registerHandlers(handlers);
+    alexa.registerHandlers(startHandlers, partyHandlers, endHandlers);
     alexa.execute();
 };
