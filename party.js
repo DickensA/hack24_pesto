@@ -1,29 +1,4 @@
 //Installed node modules: jquery underscore request express jade shelljs passport http sys lodash async mocha chai sinon sinon-chai moment connect validator restify ejs ws co when helmet wrench brain mustache should backbone forever debug
-// var params = {
-//     RequestItems: {
-//     "parties": [
-//         {
-//             PutRequest: {
-//                 Item: {
-//                     "super cool birthday"
-//                 }
-//             }
-//         },
-//         {
-//             PutRequest: {
-//                 Item: {
-//                     "awesome rave"
-//                 }
-//             }
-//         }    
-//         ]
-//     }
-// };
-
-// dynamodb.batchWriteItem(params, function(err, data) {
-//     if (err) console.log(err, err.stack);
-//     else    console.log(data); 
-// });
 
 'use strict';
 
@@ -63,8 +38,10 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
         // const partyList = this.t('PARTIES');
         var partyList = "";
         let fakedParties = [
-            "super cool birthday",
-            "awesome rave"
+            " Saria's super cool birthday, at The Broadway this Saturday at Midnight ",
+            " Amy's awesome rave, in the woods tomorrow at Noon, you'll need a mask and a torch ", 
+            " Washing the dishes, with Dad tonight after dinner, love mum ", 
+            " An intercity disco, between New York and San Francisco with The Vengaboys, As soon as the Vengabus gets here, I've heard it's coming "
         ];
         
         // check to make sure we stay inside the list index
@@ -82,7 +59,7 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
         if (partyList) {
             this.handler.state = states.ENDMODE;
             //reads out the list
-            this.emit(':ask', 'Do you want to go to' + partyList, 'Answer Yes or No');
+            this.emit(':ask', 'Do you want to go to' + partyList, 'Yes or No?');
         } else {
             this.attributes.speechOutput = this.t('NO_PARTIES_IN_LIST');
             this.emit(':ask', this.attributes.speechOutput);
@@ -90,7 +67,7 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
     },
     'AMAZON.HelpIntent': function () {
         this.attributes.speechOutput = this.t('HELP_MESSAGE');
-        this.attributes.repromptSpeech = this.t('HELP_REPROMT');
+        this.attributes.repromptSpeech = this.t('HELP_REPROMPT');
         this.emit(':ask', this.attributes.speechOutput, this.attributes.repromptSpeech);
     },
     'AMAZON.RepeatIntent': function () {
@@ -107,8 +84,9 @@ var partyHandlers = Alexa.CreateStateHandler(states.PARTYMODE, {
     },
     'Unhandled': function(){
        console.log("UNHANDLED");
+       this.handler.state = states.ENDMODE;
        var message = 'Say yes to continue hearing your invites';
-       this.emit(':ask', message, message);
+       this.emit(':ask', message);
     }
 });
 
@@ -119,7 +97,7 @@ var endHandlers = Alexa.CreateStateHandler(states.ENDMODE, {
     },
     'AMAZON.YesIntent': function() {
         this.handler.state = states.PARTYMODE;
-        this.emitWithState('GetPartyIntent', 'Awesome! I\'ll add this to your calendar.');
+        this.emitWithState(/*this.emit(':tell', 'Awesome! I\'ll add this to your calendar.'),*/ 'GetPartyIntent');
     },
     'AMAZON.NoIntent': function() {
         this.handler.state = states.PARTYMODE;
@@ -144,7 +122,7 @@ const languageStrings = {
             WELCOME_MESSAGE: "I Like To Party! Do you like to party? Let's take a look at your invites",
             WELCOME_REPROMT: "Hello. Are you there? Would you like to hear your party list?",
             //PARTIES: "Parteeeey", // not sure how this works, but we need this to get the party list
-            NO_PARTIES_IN_LIST: "Sorry matey, no parties today!",
+            NO_PARTIES_IN_LIST: "Sorry matey, no more parties for you!",
             HELP_MESSAGE: "Help",
             HELP_REPROMPT: "Help reprompt",
             STOP_MESSAGE: "Until next time; Party on!",
