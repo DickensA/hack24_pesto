@@ -8,12 +8,14 @@ const Alexa = require('alexa-sdk');
 // would come from a web service, json file etc. in the real deal
 
 //const APP_ID = undefined; // TODO replace with our app ID (OPTIONAL).
-
 var event_counter = 0;
 
 const handlers ={
     //new session of our skill
     'NewSession': function() {
+        if(Object.keys(this.attributes).length === 0) {
+            this.attributes['eventCounter'] = event_counter;
+        }
         this.attributes.speechOutput = this.t('WELCOME_MESSAGE' /*any variables we use in the message*/);
         //no reply or a reply that's not recognized will trigger this
         this.attributes.repromptSpeech = this.t('WELCOME_REPROMPT');
@@ -34,14 +36,15 @@ const handlers ={
         
         
         // check to make sure we stay inside the list index
-        if (event_counter >= (fakedParties.length - 1)) {
+        if (this.attributes.eventCounter >= (fakedParties.length - 1)) {
             // all events have been accessed, we should skip to the first event again
-            event_counter = 0;
+            this.attributes["eventCounter"] = 0;
             
         } else {
-            partyList = this.t(fakedParties[event_counter]);
-            event_counter++;
+            partyList = this.t(fakedParties[this.attributes.eventCounter]);
+            var event_counter = this.attributes["eventCounter"]+1;
         }
+        
         // NEW NEW new end
         
         
