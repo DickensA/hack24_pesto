@@ -34,4 +34,4 @@ Here is our initial diagram plan:
 
 We added more detail once we got the start intent working: 
 
-![Second Plan](/our_second_plan.jpg)
+![Second Plan](/our_second_plan_updated.jpg)
